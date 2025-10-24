@@ -1,0 +1,1301 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank API - Gestion Bancaire</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --warning-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            --danger-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            --dark-bg: #1a1a1a;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .hero-section {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            color: white;
+            padding: 120px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .navbar {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+
+        .card-hover {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+
+        .card-hover:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        }
+
+        .btn-custom {
+            background: var(--primary-gradient);
+            border: none;
+            color: white;
+            border-radius: 25px;
+            padding: 12px 30px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .btn-custom::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-custom:hover::before {
+            left: 100%;
+        }
+
+        .btn-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-outline-primary {
+            border: 2px solid #667eea;
+            color: #667eea;
+            background: transparent;
+            border-radius: 25px;
+            padding: 10px 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-primary:hover {
+            background: var(--primary-gradient);
+            border-color: transparent;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .section-bg {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            margin: 50px 0;
+            border-radius: 30px;
+            padding: 60px 0;
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto 20px;
+            background: var(--primary-gradient);
+            color: white;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .form-control {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 12px 20px;
+            color: #333;
+        }
+
+        .form-control:focus {
+            background: rgba(255,255,255,0.9);
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+
+        .table {
+            background: var(--card-bg);
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .table thead th {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            font-weight: 600;
+        }
+
+        .api-buttons .btn {
+            margin: 2px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        .footer {
+            background: var(--dark-bg);
+            color: white;
+            padding: 40px 0;
+            margin-top: 50px;
+        }
+
+        .stats-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .stats-number {
+            font-size: 3rem;
+            font-weight: bold;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .float-animation {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-university me-2"></i>Bank API
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#home">Accueil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#clients">Clients</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#comptes">Comptes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#api">API</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section id="home" class="hero-section">
+        <div class="container text-center">
+            <h1 class="display-4 mb-4">Bienvenue sur Bank API</h1>
+            <p class="lead mb-4">Système de gestion bancaire moderne et sécurisé</p>
+            <a href="#clients" class="btn btn-custom btn-lg me-3">
+                <i class="fas fa-users me-2"></i>Gérer les Clients
+            </a>
+            <a href="#comptes" class="btn btn-outline-light btn-lg">
+                <i class="fas fa-credit-card me-2"></i>Gérer les Comptes
+            </a>
+        </div>
+    </section>
+
+    <section id="clients" class="section-bg">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto text-center mb-5">
+                    <h2 class="display-4 mb-3 text-white">Gestion des Clients</h2>
+                    <p class="lead text-white-50">Créez, consultez et gérez vos clients bancaires avec élégance</p>
+                </div>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card card-hover h-100 border-0">
+                        <div class="card-body text-center p-5">
+                            <div class="feature-icon float-animation">
+                                <i class="fas fa-user-plus"></i>
+                            </div>
+                            <h5 class="card-title text-dark fw-bold">Créer un Client</h5>
+                            <p class="card-text text-muted">Ajoutez de nouveaux clients à votre base de données</p>
+                            <button class="btn btn-custom mt-3" onclick="showCreateClientModal()">
+                                <i class="fas fa-plus me-2"></i>Créer
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card card-hover h-100 border-0">
+                        <div class="card-body text-center p-5">
+                            <div class="feature-icon float-animation" style="animation-delay: 0.5s;">
+                                <i class="fas fa-list"></i>
+                            </div>
+                            <h5 class="card-title text-dark fw-bold">Liste des Clients</h5>
+                            <p class="card-text text-muted">Consultez tous vos clients enregistrés</p>
+                            <button class="btn btn-outline-primary mt-3" onclick="loadClients()">
+                                <i class="fas fa-eye me-2"></i>Voir la liste
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card card-hover h-100 border-0">
+                        <div class="card-body text-center p-5">
+                            <div class="feature-icon float-animation" style="animation-delay: 1s;">
+                                <i class="fas fa-search"></i>
+                            </div>
+                            <h5 class="card-title text-dark fw-bold">Rechercher un Client</h5>
+                            <p class="card-text text-muted">Trouvez un client par son identifiant</p>
+                            <button class="btn btn-outline-primary mt-3" onclick="showSearchClientModal()">
+                                <i class="fas fa-search me-2"></i>Rechercher
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="comptes" class="py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto text-center mb-5">
+                    <h2 class="display-4 mb-3 text-white">Gestion des Comptes</h2>
+                    <p class="lead text-white-50">Gérez les comptes bancaires de vos clients avec précision</p>
+                </div>
+            </div>
+            <div class="row g-4 mb-5">
+                <div class="col-md-6">
+                    <div class="card card-hover h-100 border-0">
+                        <div class="card-body text-center p-5">
+                            <div class="feature-icon float-animation" style="background: var(--warning-gradient);">
+                                <i class="fas fa-plus-circle"></i>
+                            </div>
+                            <h5 class="card-title text-dark fw-bold">Créer un Compte</h5>
+                            <p class="card-text text-muted">Ouvrez un nouveau compte pour un client</p>
+                            <button class="btn btn-custom mt-3" onclick="showCreateAccountModal()">
+                                <i class="fas fa-plus-circle me-2"></i>Créer
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card card-hover h-100 border-0">
+                        <div class="card-body text-center p-5">
+                            <div class="feature-icon float-animation" style="background: var(--danger-gradient); animation-delay: 0.5s;">
+                                <i class="fas fa-exchange-alt"></i>
+                            </div>
+                            <h5 class="card-title text-dark fw-bold">Effectuer un Transfert</h5>
+                            <p class="card-text text-muted">Transférez des fonds entre comptes</p>
+                            <button class="btn btn-outline-primary mt-3" onclick="showTransferModal()">
+                                <i class="fas fa-exchange-alt me-2"></i>Transférer
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistics Cards -->
+            <div class="row g-4">
+                <div class="col-md-3">
+                    <div class="stats-card">
+                        <div class="stats-number" id="totalClients">0</div>
+                        <h6 class="text-white">Clients Actifs</h6>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stats-card">
+                        <div class="stats-number" id="totalAccounts">0</div>
+                        <h6 class="text-white">Comptes Ouverts</h6>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stats-card">
+                        <div class="stats-number" id="totalBalance">0€</div>
+                        <h6 class="text-white">Solde Total</h6>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stats-card">
+                        <div class="stats-number" id="totalTransactions">0</div>
+                        <h6 class="text-white">Transactions</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="api" class="section-bg">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto text-center mb-5">
+                    <h2 class="display-4 mb-3 text-white">API REST Interactive</h2>
+                    <p class="lead text-white-50">Testez tous les endpoints directement depuis votre navigateur</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="glass-card p-4 mb-4">
+                        <h4 class="text-white mb-3"><i class="fas fa-users me-2"></i>Clients</h4>
+                        <div class="api-buttons mb-3">
+                            <button class="btn btn-outline-primary" onclick="loadClients()">GET /clients</button>
+                            <button class="btn btn-outline-success" onclick="showCreateClientModal()">POST /clients</button>
+                            <button class="btn btn-outline-info" onclick="showSearchClientModal()">GET /clients/{id}</button>
+                            <button class="btn btn-outline-warning" onclick="showUpdateClientModal()">PUT /clients/{id}</button>
+                            <button class="btn btn-outline-danger" onclick="showDeleteClientModal()">DELETE /clients/{id}</button>
+                        </div>
+                        <ul class="list-group bg-transparent">
+                            <li class="list-group-item bg-transparent text-white border-secondary"><code class="text-info">GET /clients</code> - Liste des clients</li>
+                            <li class="list-group-item bg-transparent text-white border-secondary"><code class="text-success">POST /clients</code> - Créer un client</li>
+                            <li class="list-group-item bg-transparent text-white border-secondary"><code class="text-info">GET /clients/{id}</code> - Détails d'un client</li>
+                            <li class="list-group-item bg-transparent text-white border-secondary"><code class="text-warning">PUT /clients/{id}</code> - Modifier un client</li>
+                            <li class="list-group-item bg-transparent text-white border-secondary"><code class="text-danger">DELETE /clients/{id}</code> - Supprimer un client</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="glass-card p-4 mb-4">
+                        <h4 class="text-white mb-3"><i class="fas fa-credit-card me-2"></i>Comptes</h4>
+                        <div class="api-buttons mb-3">
+                            <button class="btn btn-outline-primary" onclick="loadComptes()">GET /comptes</button>
+                            <button class="btn btn-outline-warning" onclick="showCreateAccountModal()">POST /create</button>
+                            <button class="btn btn-outline-info" onclick="showGetAccountModal()">GET /comptes/{id}</button>
+                            <button class="btn btn-outline-secondary" onclick="showUpdateAccountModal()">PUT /comptes/{id}</button>
+                            <button class="btn btn-outline-danger" onclick="showDeleteAccountModal()">DELETE /comptes/{id}</button>
+                            <button class="btn btn-outline-success" onclick="showCheckBalanceModal()">GET /solde</button>
+                            <button class="btn btn-outline-danger" onclick="showTransferModal()">POST /transfer</button>
+                        </div>
+                        <ul class="list-group bg-transparent">
+                            <li class="list-group-item bg-transparent text-white border-secondary"><code class="text-primary">GET /comptes</code> - Liste des comptes</li>
+                            <li class="list-group-item bg-transparent text-white border-secondary"><code class="text-warning">POST /create</code> - Créer un compte</li>
+                            <li class="list-group-item bg-transparent text-white border-secondary"><code class="text-info">GET /comptes/{id}</code> - Détails d'un compte</li>
+                            <li class="list-group-item bg-transparent text-white border-secondary"><code class="text-secondary">PUT /comptes/{id}</code> - Modifier un compte</li>
+                            <li class="list-group-item bg-transparent text-white border-secondary"><code class="text-danger">DELETE /comptes/{id}</code> - Supprimer un compte</li>
+                            <li class="list-group-item bg-transparent text-white border-secondary"><code class="text-success">GET /solde?compteId={id}</code> - Consulter le solde</li>
+                            <li class="list-group-item bg-transparent text-white border-secondary"><code class="text-danger">POST /transfer</code> - Effectuer un transfert</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modals -->
+    <div class="modal fade" id="createClientModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Créer un Client</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="createClientForm">
+                        <div class="mb-3">
+                            <label class="form-label">ID</label>
+                            <input type="number" class="form-control" id="clientId" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Nom</label>
+                            <input type="text" class="form-control" id="clientNom" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Prénom</label>
+                            <input type="text" class="form-control" id="clientPrenom" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" id="clientEmail" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-custom" onclick="createClient()">Créer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="searchClientModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Rechercher un Client</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">ID du Client</label>
+                        <input type="number" class="form-control" id="searchClientId" required>
+                    </div>
+                    <div id="clientDetails" class="mt-3" style="display: none;">
+                        <h6>Détails du Client:</h6>
+                        <div id="clientInfo"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                    <button type="button" class="btn btn-info" onclick="searchClient()">Rechercher</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="createAccountModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Créer un Compte</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="createAccountForm">
+                        <div class="mb-3">
+                            <label class="form-label">ID du Compte</label>
+                            <input type="number" class="form-control" id="accountId" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Numéro de Compte</label>
+                            <input type="text" class="form-control" id="accountNumero" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Solde Initial</label>
+                            <input type="number" step="0.01" class="form-control" id="accountSolde" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">ID du Client</label>
+                            <input type="number" class="form-control" id="accountClientId" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-warning" onclick="createAccount()">Créer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="transferModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Effectuer un Transfert</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="transferForm">
+                        <div class="mb-3">
+                            <label class="form-label">ID Compte Source</label>
+                            <input type="number" class="form-control" id="fromAccountId" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">ID Compte Destination</label>
+                            <input type="number" class="form-control" id="toAccountId" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Montant</label>
+                            <input type="number" step="0.01" class="form-control" id="transferAmount" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-danger" onclick="transferMoney()">Transférer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="clientsListModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Liste des Clients</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="clientsList" class="table-responsive">
+                        <!-- Clients list will be loaded here -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="comptesListModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Liste des Comptes</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="comptesList" class="table-responsive">
+                        <!-- Comptes list will be loaded here -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="getAccountModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Détails d'un Compte</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">ID du Compte</label>
+                        <input type="number" class="form-control" id="getAccountId" required>
+                    </div>
+                    <div id="accountDetails" class="mt-3" style="display: none;">
+                        <h6>Détails du Compte:</h6>
+                        <div id="accountInfo"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                    <button type="button" class="btn btn-info" onclick="getAccount()">Rechercher</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="updateAccountModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Modifier un Compte</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="updateAccountForm">
+                        <div class="mb-3">
+                            <label class="form-label">ID du Compte</label>
+                            <input type="number" class="form-control" id="updateAccountId" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Nouveau Numéro</label>
+                            <input type="text" class="form-control" id="updateAccountNumero">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Nouveau Solde</label>
+                            <input type="number" step="0.01" class="form-control" id="updateAccountSolde">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">ID du Client</label>
+                            <input type="number" class="form-control" id="updateAccountClientId">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-warning" onclick="updateAccount()">Modifier</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="deleteAccountModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Supprimer un Compte</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">ID du Compte à supprimer</label>
+                        <input type="number" class="form-control" id="deleteAccountId" required>
+                    </div>
+                    <div class="alert alert-warning">
+                        <strong>Attention!</strong> Cette action est irréversible.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-danger" onclick="deleteAccount()">Supprimer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="checkBalanceModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Consulter le Solde</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">ID du Compte</label>
+                        <input type="number" class="form-control" id="balanceAccountId" required>
+                    </div>
+                    <div id="balanceResult" class="mt-3" style="display: none;">
+                        <h6>Solde du compte:</h6>
+                        <div id="balanceInfo" class="alert alert-info"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                    <button type="button" class="btn btn-success" onclick="checkBalance()">Consulter</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="updateClientModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Modifier un Client</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="updateClientForm">
+                        <div class="mb-3">
+                            <label class="form-label">ID du Client</label>
+                            <input type="number" class="form-control" id="updateClientId" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Nouveau Nom</label>
+                            <input type="text" class="form-control" id="updateClientNom">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Nouveau Prénom</label>
+                            <input type="text" class="form-control" id="updateClientPrenom">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Nouvel Email</label>
+                            <input type="email" class="form-control" id="updateClientEmail">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-warning" onclick="updateClient()">Modifier</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="deleteClientModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Supprimer un Client</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">ID du Client à supprimer</label>
+                        <input type="number" class="form-control" id="deleteClientId" required>
+                    </div>
+                    <div class="alert alert-warning">
+                        <strong>Attention!</strong> Cette action est irréversible.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-danger" onclick="deleteClient()">Supprimer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 text-center mb-3">
+                    <h5 class="text-white mb-3">Bank API</h5>
+                    <p class="text-white-50">Système de gestion bancaire moderne et sécurisé</p>
+                </div>
+                <div class="col-md-4 text-center mb-3">
+                    <h5 class="text-white mb-3">Liens Rapides</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#home" class="text-white-50 text-decoration-none">Accueil</a></li>
+                        <li><a href="#clients" class="text-white-50 text-decoration-none">Clients</a></li>
+                        <li><a href="#comptes" class="text-white-50 text-decoration-none">Comptes</a></li>
+                        <li><a href="#api" class="text-white-50 text-decoration-none">API</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 text-center mb-3">
+                    <h5 class="text-white mb-3">Technologies</h5>
+                    <div class="d-flex justify-content-center gap-3">
+                        <span class="badge bg-primary">Spring Boot</span>
+                        <span class="badge bg-success">H2 Database</span>
+                        <span class="badge bg-info">REST API</span>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4" style="border-color: rgba(255,255,255,0.1);">
+            <div class="text-center">
+                <p class="text-white-50 mb-0">&copy; 2025 Bank API. Tous droits réservés. | Construit avec <i class="fas fa-heart text-danger"></i> et Spring Boot</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const API_BASE = '';
+
+        function showCreateClientModal() {
+            new bootstrap.Modal(document.getElementById('createClientModal')).show();
+        }
+
+        function showSearchClientModal() {
+            new bootstrap.Modal(document.getElementById('searchClientModal')).show();
+        }
+
+        function showCreateAccountModal() {
+            new bootstrap.Modal(document.getElementById('createAccountModal')).show();
+        }
+
+        function showTransferModal() {
+            new bootstrap.Modal(document.getElementById('transferModal')).show();
+        }
+
+        function showGetAccountModal() {
+            new bootstrap.Modal(document.getElementById('getAccountModal')).show();
+        }
+
+        function showUpdateAccountModal() {
+            new bootstrap.Modal(document.getElementById('updateAccountModal')).show();
+        }
+
+        function showDeleteAccountModal() {
+            new bootstrap.Modal(document.getElementById('deleteAccountModal')).show();
+        }
+
+        function showCheckBalanceModal() {
+            new bootstrap.Modal(document.getElementById('checkBalanceModal')).show();
+        }
+
+        function showUpdateClientModal() {
+            new bootstrap.Modal(document.getElementById('updateClientModal')).show();
+        }
+
+        function showDeleteClientModal() {
+            new bootstrap.Modal(document.getElementById('deleteClientModal')).show();
+        }
+
+        async function createClient() {
+            const client = {
+                id: document.getElementById('clientId').value,
+                nom: document.getElementById('clientNom').value,
+                prenom: document.getElementById('clientPrenom').value,
+                email: document.getElementById('clientEmail').value
+            };
+
+            try {
+                const response = await fetch(`${API_BASE}/clients`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Basic ' + btoa('admin:password')
+                    },
+                    body: JSON.stringify(client)
+                });
+
+                if (response.ok) {
+                    alert('Client créé avec succès!');
+                    bootstrap.Modal.getInstance(document.getElementById('createClientModal')).hide();
+                    document.getElementById('createClientForm').reset();
+                    updateStats();
+                } else {
+                    alert('Erreur lors de la création du client');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Erreur de connexion');
+            }
+        }
+
+        async function updateStats() {
+            try {
+                // Get clients count
+                const clientsResponse = await fetch(`${API_BASE}/clients`, {
+                    headers: { 'Authorization': 'Basic ' + btoa('admin:password') }
+                });
+                if (clientsResponse.ok) {
+                    const clients = await clientsResponse.json();
+                    document.getElementById('totalClients').textContent = clients.length;
+                }
+
+                // Get accounts count and total balance
+                const comptesResponse = await fetch(`${API_BASE}/comptes`, {
+                    headers: { 'Authorization': 'Basic ' + btoa('admin:password') }
+                });
+                if (comptesResponse.ok) {
+                    const comptes = await comptesResponse.json();
+                    document.getElementById('totalAccounts').textContent = comptes.length;
+
+                    let totalBalance = 0;
+                    comptes.forEach(compte => totalBalance += compte.solde);
+                    document.getElementById('totalBalance').textContent = totalBalance.toFixed(2) + '€';
+                }
+            } catch (error) {
+                console.error('Error updating stats:', error);
+            }
+        }
+
+        // Load stats on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateStats();
+        });
+
+        async function searchClient() {
+            const clientId = document.getElementById('searchClientId').value;
+
+            try {
+                const response = await fetch(`${API_BASE}/clients/${clientId}`, {
+                    headers: {
+                        'Authorization': 'Basic ' + btoa('admin:password')
+                    }
+                });
+
+                if (response.ok) {
+                    const client = await response.json();
+                    document.getElementById('clientInfo').innerHTML = `
+                        <div class="card">
+                            <div class="card-body">
+                                <h6>ID: ${client.id}</h6>
+                                <p>Nom: ${client.nom} ${client.prenom}</p>
+                                <p>Email: ${client.email}</p>
+                                <button class="btn btn-sm btn-warning me-2" onclick="editClient(${client.id})">Modifier</button>
+                                <button class="btn btn-sm btn-danger" onclick="deleteClient(${client.id})">Supprimer</button>
+                            </div>
+                        </div>
+                    `;
+                    document.getElementById('clientDetails').style.display = 'block';
+                } else {
+                    alert('Client non trouvé');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Erreur de connexion');
+            }
+        }
+
+        async function loadClients() {
+            try {
+                const response = await fetch(`${API_BASE}/clients`, {
+                    headers: {
+                        'Authorization': 'Basic ' + btoa('admin:password')
+                    }
+                });
+
+                if (response.ok) {
+                    const clients = await response.json();
+                    let html = '<table class="table table-striped"><thead><tr><th>ID</th><th>Nom</th><th>Prénom</th><th>Email</th><th>Actions</th></tr></thead><tbody>';
+                    clients.forEach(client => {
+                        html += `<tr>
+                            <td>${client.id}</td>
+                            <td>${client.nom}</td>
+                            <td>${client.prenom}</td>
+                            <td>${client.email}</td>
+                            <td>
+                                <button class="btn btn-sm btn-warning me-1" onclick="editClient(${client.id})">Modifier</button>
+                                <button class="btn btn-sm btn-danger" onclick="deleteClient(${client.id})">Supprimer</button>
+                            </td>
+                        </tr>`;
+                    });
+                    html += '</tbody></table>';
+                    document.getElementById('clientsList').innerHTML = html;
+                    new bootstrap.Modal(document.getElementById('clientsListModal')).show();
+                } else {
+                    alert('Erreur lors du chargement des clients');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Erreur de connexion');
+            }
+        }
+
+        async function createAccount() {
+            const account = {
+                id: document.getElementById('accountId').value,
+                numero: document.getElementById('accountNumero').value,
+                solde: parseFloat(document.getElementById('accountSolde').value),
+                client: { id: document.getElementById('accountClientId').value }
+            };
+
+            try {
+                const response = await fetch(`${API_BASE}/create`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Basic ' + btoa('admin:password')
+                    },
+                    body: JSON.stringify(account)
+                });
+
+                if (response.ok) {
+                    alert('Compte créé avec succès!');
+                    bootstrap.Modal.getInstance(document.getElementById('createAccountModal')).hide();
+                    document.getElementById('createAccountForm').reset();
+                } else {
+                    alert('Erreur lors de la création du compte');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Erreur de connexion');
+            }
+        }
+
+        async function transferMoney() {
+            const fromId = document.getElementById('fromAccountId').value;
+            const toId = document.getElementById('toAccountId').value;
+            const amount = parseFloat(document.getElementById('transferAmount').value);
+
+            try {
+                const response = await fetch(`${API_BASE}/transfer?fromCompteId=${fromId}&toCompteId=${toId}&amount=${amount}`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Basic ' + btoa('user:password')
+                    }
+                });
+
+                if (response.ok) {
+                    alert('Transfert effectué avec succès!');
+                    bootstrap.Modal.getInstance(document.getElementById('transferModal')).hide();
+                    document.getElementById('transferForm').reset();
+                } else {
+                    const error = await response.text();
+                    alert('Erreur: ' + error);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Erreur de connexion');
+            }
+        }
+
+        async function deleteClient(id) {
+            if (confirm('Êtes-vous sûr de vouloir supprimer ce client ?')) {
+                try {
+                    const response = await fetch(`${API_BASE}/clients/${id}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Authorization': 'Basic ' + btoa('admin:password')
+                        }
+                    });
+
+                    if (response.ok) {
+                        alert('Client supprimé avec succès!');
+                        loadClients(); // Refresh the list
+                    } else {
+                        alert('Erreur lors de la suppression du client');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Erreur de connexion');
+                }
+            }
+        }
+
+        async function loadComptes() {
+            try {
+                const response = await fetch(`${API_BASE}/comptes`, {
+                    headers: {
+                        'Authorization': 'Basic ' + btoa('admin:password')
+                    }
+                });
+
+                if (response.ok) {
+                    const comptes = await response.json();
+                    let html = '<table class="table table-striped"><thead><tr><th>ID</th><th>Numéro</th><th>Solde</th><th>Client ID</th><th>Actions</th></tr></thead><tbody>';
+                    comptes.forEach(compte => {
+                        html += `<tr>
+                            <td>${compte.id}</td>
+                            <td>${compte.numero}</td>
+                            <td>${compte.solde} €</td>
+                            <td>${compte.client ? compte.client.id : 'N/A'}</td>
+                            <td>
+                                <button class="btn btn-sm btn-warning me-1" onclick="editAccount(${compte.id})">Modifier</button>
+                                <button class="btn btn-sm btn-danger" onclick="deleteAccount(${compte.id})">Supprimer</button>
+                            </td>
+                        </tr>`;
+                    });
+                    html += '</tbody></table>';
+                    document.getElementById('comptesList').innerHTML = html;
+                    new bootstrap.Modal(document.getElementById('comptesListModal')).show();
+                } else {
+                    alert('Erreur lors du chargement des comptes');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Erreur de connexion');
+            }
+        }
+
+        async function getAccount() {
+            const accountId = document.getElementById('getAccountId').value;
+
+            try {
+                const response = await fetch(`${API_BASE}/comptes/${accountId}`, {
+                    headers: {
+                        'Authorization': 'Basic ' + btoa('admin:password')
+                    }
+                });
+
+                if (response.ok) {
+                    const compte = await response.json();
+                    document.getElementById('accountInfo').innerHTML = `
+                        <div class="card">
+                            <div class="card-body">
+                                <h6>ID: ${compte.id}</h6>
+                                <p>Numéro: ${compte.numero}</p>
+                                <p>Solde: ${compte.solde} €</p>
+                                <p>Client: ${compte.client ? compte.client.nom + ' ' + compte.client.prenom : 'N/A'}</p>
+                                <button class="btn btn-sm btn-warning me-2" onclick="editAccount(${compte.id})">Modifier</button>
+                                <button class="btn btn-sm btn-danger" onclick="deleteAccount(${compte.id})">Supprimer</button>
+                            </div>
+                        </div>
+                    `;
+                    document.getElementById('accountDetails').style.display = 'block';
+                } else {
+                    alert('Compte non trouvé');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Erreur de connexion');
+            }
+        }
+
+        async function updateAccount() {
+            const accountId = document.getElementById('updateAccountId').value;
+            const account = {
+                numero: document.getElementById('updateAccountNumero').value,
+                solde: parseFloat(document.getElementById('updateAccountSolde').value),
+                client: { id: document.getElementById('updateAccountClientId').value }
+            };
+
+            try {
+                const response = await fetch(`${API_BASE}/comptes/${accountId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Basic ' + btoa('admin:password')
+                    },
+                    body: JSON.stringify(account)
+                });
+
+                if (response.ok) {
+                    alert('Compte modifié avec succès!');
+                    bootstrap.Modal.getInstance(document.getElementById('updateAccountModal')).hide();
+                    document.getElementById('updateAccountForm').reset();
+                } else {
+                    alert('Erreur lors de la modification du compte');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Erreur de connexion');
+            }
+        }
+
+        async function deleteAccount(id) {
+            if (typeof id === 'undefined') {
+                id = document.getElementById('deleteAccountId').value;
+            }
+
+            if (confirm('Êtes-vous sûr de vouloir supprimer ce compte ?')) {
+                try {
+                    const response = await fetch(`${API_BASE}/comptes/${id}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Authorization': 'Basic ' + btoa('admin:password')
+                        }
+                    });
+
+                    if (response.ok) {
+                        alert('Compte supprimé avec succès!');
+                        if (typeof id === 'undefined') {
+                            bootstrap.Modal.getInstance(document.getElementById('deleteAccountModal')).hide();
+                        } else {
+                            loadComptes(); // Refresh the list
+                        }
+                    } else {
+                        alert('Erreur lors de la suppression du compte');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Erreur de connexion');
+                }
+            }
+        }
+
+        async function checkBalance() {
+            const accountId = document.getElementById('balanceAccountId').value;
+
+            try {
+                const response = await fetch(`${API_BASE}/solde?compteId=${accountId}`, {
+                    headers: {
+                        'Authorization': 'Basic ' + btoa('admin:password')
+                    }
+                });
+
+                if (response.ok) {
+                    const solde = await response.json();
+                    document.getElementById('balanceInfo').innerHTML = `<strong>${solde} €</strong>`;
+                    document.getElementById('balanceResult').style.display = 'block';
+                } else {
+                    alert('Erreur lors de la consultation du solde');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Erreur de connexion');
+            }
+        }
+
+        async function updateClient() {
+            const clientId = document.getElementById('updateClientId').value;
+            const client = {
+                nom: document.getElementById('updateClientNom').value,
+                prenom: document.getElementById('updateClientPrenom').value,
+                email: document.getElementById('updateClientEmail').value
+            };
+
+            try {
+                const response = await fetch(`${API_BASE}/clients/${clientId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Basic ' + btoa('admin:password')
+                    },
+                    body: JSON.stringify(client)
+                });
+
+                if (response.ok) {
+                    alert('Client modifié avec succès!');
+                    bootstrap.Modal.getInstance(document.getElementById('updateClientModal')).hide();
+                    document.getElementById('updateClientForm').reset();
+                } else {
+                    alert('Erreur lors de la modification du client');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Erreur de connexion');
+            }
+        }
+
+        async function deleteClient(id) {
+            if (typeof id === 'undefined') {
+                id = document.getElementById('deleteClientId').value;
+            }
+
+            if (confirm('Êtes-vous sûr de vouloir supprimer ce client ?')) {
+                try {
+                    const response = await fetch(`${API_BASE}/clients/${id}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Authorization': 'Basic ' + btoa('admin:password')
+                        }
+                    });
+
+                    if (response.ok) {
+                        alert('Client supprimé avec succès!');
+                        if (typeof id === 'undefined') {
+                            bootstrap.Modal.getInstance(document.getElementById('deleteClientModal')).hide();
+                        } else {
+                            loadClients(); // Refresh the list
+                        }
+                    } else {
+                        alert('Erreur lors de la suppression du client');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Erreur de connexion');
+                }
+            }
+        }
+
+        function editClient(id) {
+            // Pre-fill the update form with client data
+            document.getElementById('updateClientId').value = id;
+            new bootstrap.Modal(document.getElementById('updateClientModal')).show();
+        }
+
+        function editAccount(id) {
+            // Pre-fill the update form with account data
+            document.getElementById('updateAccountId').value = id;
+            new bootstrap.Modal(document.getElementById('updateAccountModal')).show();
+        }
+    </script>
+</body>
+</html>
