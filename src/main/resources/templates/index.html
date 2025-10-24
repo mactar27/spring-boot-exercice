@@ -8,29 +8,59 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
-            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            --warning-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-            --danger-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
-            --dark-bg: #1a1a1a;
-            --card-bg: rgba(255, 255, 255, 0.95);
-            --glass-bg: rgba(255, 255, 255, 0.1);
-            --glass-border: rgba(255, 255, 255, 0.2);
+            --primary-color: #1e3a8a;
+            --secondary-color: #3b82f6;
+            --accent-color: #f59e0b;
+            --success-color: #10b981;
+            --danger-color: #ef4444;
+            --warning-color: #f59e0b;
+            --dark-bg: #0f172a;
+            --light-bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --shadow: 0 10px 25px rgba(0,0,0,0.1);
+            --shadow-hover: 0 20px 40px rgba(0,0,0,0.15);
+            --border-radius: 16px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: var(--shadow);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 1rem 0;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary-color) !important;
         }
 
         .hero-section {
-            background: var(--glass-bg);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #06b6d4 100%);
             color: white;
-            padding: 120px 0;
+            padding: 140px 0 100px;
             position: relative;
             overflow: hidden;
         }
@@ -42,43 +72,45 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
-            opacity: 0.3;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><defs><pattern id="hero-pattern" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="150" cy="150" r="1" fill="rgba(255,255,255,0.05)"/></pattern></defs><rect width="100%" height="100%" fill="url(%23hero-pattern)"/></svg>');
         }
 
-        .navbar {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--glass-border);
-            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
         }
 
-        .card-hover {
-            background: var(--card-bg);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.3);
         }
 
-        .card-hover:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        .hero-subtitle {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .btn-custom {
-            background: var(--primary-gradient);
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
             border: none;
             color: white;
-            border-radius: 25px;
-            padding: 12px 30px;
+            padding: 16px 32px;
+            border-radius: 50px;
             font-weight: 600;
+            font-size: 1rem;
             text-transform: uppercase;
             letter-spacing: 1px;
+            transition: var(--transition);
+            box-shadow: 0 8px 25px rgba(245, 158, 11, 0.3);
             position: relative;
             overflow: hidden;
-            transition: all 0.3s ease;
         }
 
         .btn-custom::before {
@@ -89,7 +121,7 @@
             width: 100%;
             height: 100%;
             background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: left 0.5s;
+            transition: left 0.6s;
         }
 
         .btn-custom:hover::before {
@@ -97,132 +129,386 @@
         }
 
         .btn-custom:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(245, 158, 11, 0.4);
         }
 
-        .btn-outline-primary {
-            border: 2px solid #667eea;
-            color: #667eea;
+        .btn-outline-light {
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            color: white;
             background: transparent;
-            border-radius: 25px;
-            padding: 10px 25px;
+            padding: 14px 30px;
+            border-radius: 50px;
             font-weight: 600;
-            transition: all 0.3s ease;
+            transition: var(--transition);
         }
 
-        .btn-outline-primary:hover {
-            background: var(--primary-gradient);
-            border-color: transparent;
+        .btn-outline-light:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: white;
             color: white;
             transform: translateY(-2px);
         }
 
-        .section-bg {
-            background: var(--glass-bg);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
-            margin: 50px 0;
-            border-radius: 30px;
-            padding: 60px 0;
+        .section {
+            padding: 80px 0;
+            background: var(--light-bg);
+        }
+
+        .section-dark {
+            background: var(--dark-bg);
+            color: white;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .section-title.text-white {
+            color: white;
+        }
+
+        .section-subtitle {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .section-subtitle.text-white {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .feature-card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-hover);
         }
 
         .feature-icon {
-            width: 80px;
-            height: 80px;
+            width: 64px;
+            height: 64px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2rem;
-            margin: 0 auto 20px;
-            background: var(--primary-gradient);
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: white;
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 8px 20px rgba(30, 58, 138, 0.3);
+        }
+
+        .feature-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .feature-description {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-btn {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 500;
+            transition: var(--transition);
+            width: 100%;
+        }
+
+        .feature-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(30, 58, 138, 0.3);
+        }
+
+        .stats-section {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            padding: 60px 0;
+            color: white;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #f59e0b, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 500;
+        }
+
+        .api-section {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 3rem;
+            box-shadow: var(--shadow);
+            margin-top: 2rem;
+        }
+
+        .api-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .api-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .api-btn {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .api-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .api-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .api-item {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .api-method {
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .api-description {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
         }
 
         .modal-content {
             background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            border-radius: var(--border-radius);
+            border: none;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+        }
+
+        .modal-header {
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            padding: 1.5rem;
+        }
+
+        .modal-title {
+            font-weight: 600;
+            color: var(--text-primary);
         }
 
         .form-control {
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: 15px;
-            padding: 12px 20px;
-            color: #333;
+            border: 2px solid rgba(0,0,0,0.1);
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-size: 1rem;
+            transition: var(--transition);
         }
 
         .form-control:focus {
-            background: rgba(255,255,255,0.9);
-            border-color: #667eea;
-            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
         }
 
         .table {
             background: var(--card-bg);
-            border-radius: 15px;
+            border-radius: var(--border-radius);
             overflow: hidden;
+            box-shadow: var(--shadow);
         }
 
         .table thead th {
-            background: var(--primary-gradient);
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: white;
             border: none;
             font-weight: 600;
+            padding: 1rem;
         }
 
-        .api-buttons .btn {
-            margin: 2px;
-            border-radius: 20px;
-            font-size: 0.8rem;
+        .table tbody td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
         }
 
         .footer {
             background: var(--dark-bg);
             color: white;
-            padding: 40px 0;
-            margin-top: 50px;
+            padding: 3rem 0 2rem;
+            margin-top: 4rem;
         }
 
-        .stats-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h5 {
+            color: white;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .footer-badges {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 0.5rem 1rem;
             border-radius: 20px;
-            padding: 30px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 2rem;
             text-align: center;
-            margin: 20px 0;
+            color: rgba(255, 255, 255, 0.6);
         }
 
-        .stats-number {
-            font-size: 3rem;
-            font-weight: bold;
-            background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out;
         }
 
-        .float-animation {
-            animation: float 3s ease-in-out infinite;
-        }
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
 
-        .glass-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(15px);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -267,178 +553,204 @@
         </div>
     </section>
 
-    <section id="clients" class="section-bg">
+    <section id="clients" class="section">
         <div class="container">
-            <div class="row">
-                <div class="col-lg-8 mx-auto text-center mb-5">
-                    <h2 class="display-4 mb-3 text-white">Gestion des Clients</h2>
-                    <p class="lead text-white-50">Créez, consultez et gérez vos clients bancaires avec élégance</p>
-                </div>
+            <div class="section-header fade-in-up">
+                <h2 class="section-title">Gestion des Clients</h2>
+                <p class="section-subtitle">Créez, consultez et gérez vos clients bancaires avec élégance</p>
             </div>
-            <div class="row g-4">
-                <div class="col-md-4">
-                    <div class="card card-hover h-100 border-0">
-                        <div class="card-body text-center p-5">
-                            <div class="feature-icon float-animation">
-                                <i class="fas fa-user-plus"></i>
-                            </div>
-                            <h5 class="card-title text-dark fw-bold">Créer un Client</h5>
-                            <p class="card-text text-muted">Ajoutez de nouveaux clients à votre base de données</p>
-                            <button class="btn btn-custom mt-3" onclick="showCreateClientModal()">
-                                <i class="fas fa-plus me-2"></i>Créer
-                            </button>
-                        </div>
+            <div class="feature-grid">
+                <div class="feature-card fade-in-up">
+                    <div class="feature-icon">
+                        <i class="fas fa-user-plus"></i>
                     </div>
+                    <h3 class="feature-title">Créer un Client</h3>
+                    <p class="feature-description">Ajoutez de nouveaux clients à votre base de données avec toutes leurs informations</p>
+                    <button class="feature-btn" onclick="showCreateClientModal()">
+                        <i class="fas fa-plus me-2"></i>Créer Client
+                    </button>
                 </div>
-                <div class="col-md-4">
-                    <div class="card card-hover h-100 border-0">
-                        <div class="card-body text-center p-5">
-                            <div class="feature-icon float-animation" style="animation-delay: 0.5s;">
-                                <i class="fas fa-list"></i>
-                            </div>
-                            <h5 class="card-title text-dark fw-bold">Liste des Clients</h5>
-                            <p class="card-text text-muted">Consultez tous vos clients enregistrés</p>
-                            <button class="btn btn-outline-primary mt-3" onclick="loadClients()">
-                                <i class="fas fa-eye me-2"></i>Voir la liste
-                            </button>
-                        </div>
+                <div class="feature-card fade-in-up">
+                    <div class="feature-icon">
+                        <i class="fas fa-list"></i>
                     </div>
+                    <h3 class="feature-title">Liste des Clients</h3>
+                    <p class="feature-description">Consultez tous vos clients enregistrés avec leurs détails complets</p>
+                    <button class="feature-btn" onclick="loadClients()">
+                        <i class="fas fa-eye me-2"></i>Voir Liste
+                    </button>
                 </div>
-                <div class="col-md-4">
-                    <div class="card card-hover h-100 border-0">
-                        <div class="card-body text-center p-5">
-                            <div class="feature-icon float-animation" style="animation-delay: 1s;">
-                                <i class="fas fa-search"></i>
-                            </div>
-                            <h5 class="card-title text-dark fw-bold">Rechercher un Client</h5>
-                            <p class="card-text text-muted">Trouvez un client par son identifiant</p>
-                            <button class="btn btn-outline-primary mt-3" onclick="showSearchClientModal()">
-                                <i class="fas fa-search me-2"></i>Rechercher
-                            </button>
-                        </div>
+                <div class="feature-card fade-in-up">
+                    <div class="feature-icon">
+                        <i class="fas fa-search"></i>
                     </div>
+                    <h3 class="feature-title">Rechercher un Client</h3>
+                    <p class="feature-description">Trouvez rapidement un client par son identifiant unique</p>
+                    <button class="feature-btn" onclick="showSearchClientModal()">
+                        <i class="fas fa-search me-2"></i>Rechercher
+                    </button>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="comptes" class="py-5">
+    <section id="comptes" class="section-dark">
         <div class="container">
-            <div class="row">
-                <div class="col-lg-8 mx-auto text-center mb-5">
-                    <h2 class="display-4 mb-3 text-white">Gestion des Comptes</h2>
-                    <p class="lead text-white-50">Gérez les comptes bancaires de vos clients avec précision</p>
-                </div>
+            <div class="section-header fade-in-up">
+                <h2 class="section-title text-white">Gestion des Comptes</h2>
+                <p class="section-subtitle text-white">Gérez les comptes bancaires de vos clients avec précision</p>
             </div>
-            <div class="row g-4 mb-5">
-                <div class="col-md-6">
-                    <div class="card card-hover h-100 border-0">
-                        <div class="card-body text-center p-5">
-                            <div class="feature-icon float-animation" style="background: var(--warning-gradient);">
-                                <i class="fas fa-plus-circle"></i>
-                            </div>
-                            <h5 class="card-title text-dark fw-bold">Créer un Compte</h5>
-                            <p class="card-text text-muted">Ouvrez un nouveau compte pour un client</p>
-                            <button class="btn btn-custom mt-3" onclick="showCreateAccountModal()">
-                                <i class="fas fa-plus-circle me-2"></i>Créer
-                            </button>
-                        </div>
+            <div class="feature-grid">
+                <div class="feature-card fade-in-up">
+                    <div class="feature-icon">
+                        <i class="fas fa-plus-circle"></i>
                     </div>
+                    <h3 class="feature-title">Créer un Compte</h3>
+                    <p class="feature-description">Ouvrez un nouveau compte bancaire pour un client existant</p>
+                    <button class="feature-btn" onclick="showCreateAccountModal()">
+                        <i class="fas fa-plus-circle me-2"></i>Créer Compte
+                    </button>
                 </div>
-                <div class="col-md-6">
-                    <div class="card card-hover h-100 border-0">
-                        <div class="card-body text-center p-5">
-                            <div class="feature-icon float-animation" style="background: var(--danger-gradient); animation-delay: 0.5s;">
-                                <i class="fas fa-exchange-alt"></i>
-                            </div>
-                            <h5 class="card-title text-dark fw-bold">Effectuer un Transfert</h5>
-                            <p class="card-text text-muted">Transférez des fonds entre comptes</p>
-                            <button class="btn btn-outline-primary mt-3" onclick="showTransferModal()">
-                                <i class="fas fa-exchange-alt me-2"></i>Transférer
-                            </button>
-                        </div>
+                <div class="feature-card fade-in-up">
+                    <div class="feature-icon">
+                        <i class="fas fa-exchange-alt"></i>
                     </div>
+                    <h3 class="feature-title">Effectuer un Transfert</h3>
+                    <p class="feature-description">Transférez des fonds entre comptes de manière sécurisée</p>
+                    <button class="feature-btn" onclick="showTransferModal()">
+                        <i class="fas fa-exchange-alt me-2"></i>Transférer
+                    </button>
+                </div>
+                <div class="feature-card fade-in-up">
+                    <div class="feature-icon">
+                        <i class="fas fa-list"></i>
+                    </div>
+                    <h3 class="feature-title">Liste des Comptes</h3>
+                    <p class="feature-description">Consultez tous les comptes ouverts avec leurs soldes</p>
+                    <button class="feature-btn" onclick="loadComptes()">
+                        <i class="fas fa-list me-2"></i>Voir Comptes
+                    </button>
+                </div>
+                <div class="feature-card fade-in-up">
+                    <div class="feature-icon">
+                        <i class="fas fa-search-dollar"></i>
+                    </div>
+                    <h3 class="feature-title">Consulter Solde</h3>
+                    <p class="feature-description">Vérifiez le solde d'un compte spécifique</p>
+                    <button class="feature-btn" onclick="showCheckBalanceModal()">
+                        <i class="fas fa-search-dollar me-2"></i>Vérifier Solde
+                    </button>
                 </div>
             </div>
 
             <!-- Statistics Cards -->
-            <div class="row g-4">
-                <div class="col-md-3">
-                    <div class="stats-card">
-                        <div class="stats-number" id="totalClients">0</div>
-                        <h6 class="text-white">Clients Actifs</h6>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="stats-card">
-                        <div class="stats-number" id="totalAccounts">0</div>
-                        <h6 class="text-white">Comptes Ouverts</h6>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="stats-card">
-                        <div class="stats-number" id="totalBalance">0€</div>
-                        <h6 class="text-white">Solde Total</h6>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="stats-card">
-                        <div class="stats-number" id="totalTransactions">0</div>
-                        <h6 class="text-white">Transactions</h6>
+            <div class="stats-section">
+                <div class="container">
+                    <div class="stats-grid">
+                        <div class="stat-card fade-in-up">
+                            <div class="stat-number" id="totalClients">0</div>
+                            <h6 class="stat-label">Clients Actifs</h6>
+                        </div>
+                        <div class="stat-card fade-in-up">
+                            <div class="stat-number" id="totalAccounts">0</div>
+                            <h6 class="stat-label">Comptes Ouverts</h6>
+                        </div>
+                        <div class="stat-card fade-in-up">
+                            <div class="stat-number" id="totalBalance">0€</div>
+                            <h6 class="stat-label">Solde Total</h6>
+                        </div>
+                        <div class="stat-card fade-in-up">
+                            <div class="stat-number" id="totalTransactions">0</div>
+                            <h6 class="stat-label">Transactions</h6>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="api" class="section-bg">
+    <section id="api" class="section">
         <div class="container">
-            <div class="row">
-                <div class="col-lg-8 mx-auto text-center mb-5">
-                    <h2 class="display-4 mb-3 text-white">API REST Interactive</h2>
-                    <p class="lead text-white-50">Testez tous les endpoints directement depuis votre navigateur</p>
-                </div>
+            <div class="section-header fade-in-up">
+                <h2 class="section-title">API REST Interactive</h2>
+                <p class="section-subtitle">Testez tous les endpoints directement depuis votre navigateur</p>
             </div>
             <div class="row">
                 <div class="col-md-6">
-                    <div class="glass-card p-4 mb-4">
-                        <h4 class="text-white mb-3"><i class="fas fa-users me-2"></i>Clients</h4>
-                        <div class="api-buttons mb-3">
-                            <button class="btn btn-outline-primary" onclick="loadClients()">GET /clients</button>
-                            <button class="btn btn-outline-success" onclick="showCreateClientModal()">POST /clients</button>
-                            <button class="btn btn-outline-info" onclick="showSearchClientModal()">GET /clients/{id}</button>
-                            <button class="btn btn-outline-warning" onclick="showUpdateClientModal()">PUT /clients/{id}</button>
-                            <button class="btn btn-outline-danger" onclick="showDeleteClientModal()">DELETE /clients/{id}</button>
+                    <div class="api-section">
+                        <h4 class="api-title"><i class="fas fa-users me-2"></i>Clients</h4>
+                        <div class="api-buttons">
+                            <button class="api-btn" style="background: var(--primary-color);" onclick="loadClients()">GET /clients</button>
+                            <button class="api-btn" style="background: var(--success-color);" onclick="showCreateClientModal()">POST /clients</button>
+                            <button class="api-btn" style="background: var(--secondary-color);" onclick="showSearchClientModal()">GET /clients/{id}</button>
+                            <button class="api-btn" style="background: var(--warning-color);" onclick="showUpdateClientModal()">PUT /clients/{id}</button>
+                            <button class="api-btn" style="background: var(--danger-color);" onclick="showDeleteClientModal()">DELETE /clients/{id}</button>
                         </div>
-                        <ul class="list-group bg-transparent">
-                            <li class="list-group-item bg-transparent text-white border-secondary"><code class="text-info">GET /clients</code> - Liste des clients</li>
-                            <li class="list-group-item bg-transparent text-white border-secondary"><code class="text-success">POST /clients</code> - Créer un client</li>
-                            <li class="list-group-item bg-transparent text-white border-secondary"><code class="text-info">GET /clients/{id}</code> - Détails d'un client</li>
-                            <li class="list-group-item bg-transparent text-white border-secondary"><code class="text-warning">PUT /clients/{id}</code> - Modifier un client</li>
-                            <li class="list-group-item bg-transparent text-white border-secondary"><code class="text-danger">DELETE /clients/{id}</code> - Supprimer un client</li>
+                        <ul class="api-list">
+                            <li class="api-item">
+                                <span class="api-method">GET /clients</span>
+                                <span class="api-description">Liste des clients</span>
+                            </li>
+                            <li class="api-item">
+                                <span class="api-method">POST /clients</span>
+                                <span class="api-description">Créer un client</span>
+                            </li>
+                            <li class="api-item">
+                                <span class="api-method">GET /clients/{id}</span>
+                                <span class="api-description">Détails d'un client</span>
+                            </li>
+                            <li class="api-item">
+                                <span class="api-method">PUT /clients/{id}</span>
+                                <span class="api-description">Modifier un client</span>
+                            </li>
+                            <li class="api-item">
+                                <span class="api-method">DELETE /clients/{id}</span>
+                                <span class="api-description">Supprimer un client</span>
+                            </li>
                         </ul>
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <div class="glass-card p-4 mb-4">
-                        <h4 class="text-white mb-3"><i class="fas fa-credit-card me-2"></i>Comptes</h4>
-                        <div class="api-buttons mb-3">
-                            <button class="btn btn-outline-primary" onclick="loadComptes()">GET /comptes</button>
-                            <button class="btn btn-outline-warning" onclick="showCreateAccountModal()">POST /create</button>
-                            <button class="btn btn-outline-info" onclick="showGetAccountModal()">GET /comptes/{id}</button>
-                            <button class="btn btn-outline-secondary" onclick="showUpdateAccountModal()">PUT /comptes/{id}</button>
-                            <button class="btn btn-outline-danger" onclick="showDeleteAccountModal()">DELETE /comptes/{id}</button>
-                            <button class="btn btn-outline-success" onclick="showCheckBalanceModal()">GET /solde</button>
-                            <button class="btn btn-outline-danger" onclick="showTransferModal()">POST /transfer</button>
+                    <div class="api-section">
+                        <h4 class="api-title"><i class="fas fa-credit-card me-2"></i>Comptes</h4>
+                        <div class="api-buttons">
+                            <button class="api-btn" style="background: var(--primary-color);" onclick="loadComptes()">GET /comptes</button>
+                            <button class="api-btn" style="background: var(--warning-color);" onclick="showCreateAccountModal()">POST /create</button>
+                            <button class="api-btn" style="background: var(--secondary-color);" onclick="showGetAccountModal()">GET /comptes/{id}</button>
+                            <button class="api-btn" style="background: var(--accent-color);" onclick="showUpdateAccountModal()">PUT /comptes/{id}</button>
+                            <button class="api-btn" style="background: var(--danger-color);" onclick="showDeleteAccountModal()">DELETE /comptes/{id}</button>
+                            <button class="api-btn" style="background: var(--success-color);" onclick="showCheckBalanceModal()">GET /solde</button>
+                            <button class="api-btn" style="background: var(--danger-color);" onclick="showTransferModal()">POST /transfer</button>
                         </div>
-                        <ul class="list-group bg-transparent">
-                            <li class="list-group-item bg-transparent text-white border-secondary"><code class="text-primary">GET /comptes</code> - Liste des comptes</li>
-                            <li class="list-group-item bg-transparent text-white border-secondary"><code class="text-warning">POST /create</code> - Créer un compte</li>
-                            <li class="list-group-item bg-transparent text-white border-secondary"><code class="text-info">GET /comptes/{id}</code> - Détails d'un compte</li>
-                            <li class="list-group-item bg-transparent text-white border-secondary"><code class="text-secondary">PUT /comptes/{id}</code> - Modifier un compte</li>
-                            <li class="list-group-item bg-transparent text-white border-secondary"><code class="text-danger">DELETE /comptes/{id}</code> - Supprimer un compte</li>
-                            <li class="list-group-item bg-transparent text-white border-secondary"><code class="text-success">GET /solde?compteId={id}</code> - Consulter le solde</li>
-                            <li class="list-group-item bg-transparent text-white border-secondary"><code class="text-danger">POST /transfer</code> - Effectuer un transfert</li>
+                        <ul class="api-list">
+                            <li class="api-item">
+                                <span class="api-method">GET /comptes</span>
+                                <span class="api-description">Liste des comptes</span>
+                            </li>
+                            <li class="api-item">
+                                <span class="api-method">POST /create</span>
+                                <span class="api-description">Créer un compte</span>
+                            </li>
+                            <li class="api-item">
+                                <span class="api-method">GET /comptes/{id}</span>
+                                <span class="api-description">Détails d'un compte</span>
+                            </li>
+                            <li class="api-item">
+                                <span class="api-method">PUT /comptes/{id}</span>
+                                <span class="api-description">Modifier un compte</span>
+                            </li>
+                            <li class="api-item">
+                                <span class="api-method">DELETE /comptes/{id}</span>
+                                <span class="api-description">Supprimer un compte</span>
+                            </li>
+                            <li class="api-item">
+                                <span class="api-method">GET /solde</span>
+                                <span class="api-description">Consulter le solde</span>
+                            </li>
+                            <li class="api-item">
+                                <span class="api-method">POST /transfer</span>
+                                <span class="api-description">Effectuer un transfert</span>
+                            </li>
                         </ul>
                     </div>
                 </div>
